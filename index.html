@@ -1,61 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Unlocking...</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<title>Unlocking...</title>
 
-    .unlock-container {
-      padding: 2rem 3rem;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      backdrop-filter: blur(5px);
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+}
 
-    h1 {
-      margin: 0 0 1rem;
-      font-size: 2rem;
-      animation: fadeIn 1s ease-in-out;
-    }
+.container {
+  text-align: center;
+  padding: 40px 50px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  width: 320px;
+}
 
-    p {
-      margin: 0;
-      font-size: 1.2rem;
-      animation: fadeIn 2s ease-in-out;
-    }
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255,255,255,0.2);
+  border-top: 6px solid #00ffd5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.status {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.unlocked {
+  color: #00ffd5;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+
+  setTimeout(() => {
+    document.querySelector(".spinner").style.display = "none";
+    const status = document.querySelector(".status");
+    status.textContent = "Unlocked ✓";
+    status.classList.add("unlocked");
+
+    // Open app AFTER UI updates
     if (token) {
-      setTimeout(() => {
-        window.location.href = "erenxiters://unlock?token=" + encodeURIComponent(token);
-      }, 1000); // small delay to let the user see the message
+      window.location.href = "erenxiters://unlock?token=" + encodeURIComponent(token);
     }
-  </script>
+  }, 2000);
+});
+</script>
 </head>
+
 <body>
-  <div class="unlock-container">
-    <h1>Unlocking Your App…</h1>
-    <p>You may close this tab shortly.</p>
-  </div>
+<div class="container">
+  <div class="title">Eren Xiters Free Panel</div>
+  <div class="spinner"></div>
+  <div class="status">Unlocking your app…</div>
+</div>
 </body>
 </html>
