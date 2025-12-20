@@ -7,7 +7,7 @@ export async function handler(event) {
 
   const message = {
     content:
-`🔑 **Ad Unlock Token Generated**
+`🔑 **Ad Unlock Successfully !**
 
 **Token:** \`${token}\`
 **PC Name:** ${pcName}
