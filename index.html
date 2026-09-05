@@ -269,11 +269,31 @@ document.addEventListener("DOMContentLoaded", function () {
     headlineSub.textContent = "Your access has been prepared successfully. Open Eren Xiters Free Panel below to continue.";
   }
 
-  function startCountdown() {
-    var SESSION_MS = 12 * 60 * 60 * 1000;
+  var SESSION_MS = 12 * 60 * 60 * 1000;
+  var STORE_KEY = "ex_session_" + (token || "anonymous");
+
+  function loadSession() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      if (!data || !data.end || data.end <= Date.now()) {
+        localStorage.removeItem(STORE_KEY);
+        return null;
+      }
+      return data.end;
+    } catch (e) { return null; }
+  }
+
+  function saveSession(end) {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ end: end }));
+    } catch (e) {}
+  }
+
+  function startCountdown(end) {
     var elTime = document.getElementById("countdown");
     var bar = document.getElementById("progressBar");
-    var end = Date.now() + SESSION_MS;
 
     function pad(n) { return n < 10 ? "0" + n : "" + n; }
     function tick() {
@@ -289,12 +309,17 @@ document.addEventListener("DOMContentLoaded", function () {
     var timer = setInterval(tick, 1000);
   }
 
-  function finishUnlock() {
+  function showUnlocked(end) {
     busy = false;
     stateLabel.textContent = "Unlocked";
     stateSub.textContent = "Eren Xiters is active on this device.";
     showPhase(phaseUnlocked);
-    startCountdown();
+    startCountdown(end);
+  }
+
+  function finishUnlock() {
+    saveSession(Date.now() + SESSION_MS);
+    showUnlocked(Date.now() + SESSION_MS);
   }
 
   btnMain.addEventListener("click", function () {
@@ -331,6 +356,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!token) {
     initError("No session token was found in the link. Please use the link from Eren Xiters Free Panel.");
+    return;
+  }
+
+  var resumeEnd = loadSession();
+  if (resumeEnd) {
+    showUnlocked(resumeEnd);
     return;
   }
 
