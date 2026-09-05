@@ -1,100 +1,424 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Unlocking...</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eren Xiters — Access Ready</title>
+<meta name="theme-color" content="#eef1f5">
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #1f1c2c, #928dab);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #fff;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap');
 
-.container {
-  text-align: center;
-  padding: 40px 50px;
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
-  width: 320px;
+:root{
+  --ink:#15171b;
+  --muted:#737984;
+  --soft:#a0a5ad;
+  --glass:rgba(255,255,255,.56);
+  --glass2:rgba(255,255,255,.72);
+  --border:rgba(255,255,255,.88);
+  --shadow:0 36px 100px rgba(30,35,45,.13),0 10px 30px rgba(30,35,45,.06);
 }
-
-.title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 20px;
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+body{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:
+    radial-gradient(900px 600px at 8% -5%,#fff 0%,rgba(255,255,255,.5) 42%,transparent 70%),
+    radial-gradient(750px 650px at 100% 105%,rgba(210,218,229,.72),transparent 68%),
+    linear-gradient(145deg,#f8f9fb,#edf0f4 55%,#e9edf2);
 }
-
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid rgba(255,255,255,0.2);
-  border-top: 6px solid #00ffd5;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.24),transparent 35%,rgba(255,255,255,.12));
 }
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.wrap{width:min(1060px,calc(100% - 40px));margin:auto;position:relative;z-index:1}
+header{height:84px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none}
+.mark{
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  font-size:12px;font-weight:700;letter-spacing:-.05em;
+  background:rgba(255,255,255,.65);
+  border:1px solid var(--border);
+  box-shadow:0 8px 25px rgba(30,35,45,.08),inset 0 1px 0 rgba(255,255,255,.9);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
+.name{font-size:13px;font-weight:650;letter-spacing:-.025em}
+.header-note{font-size:11px;color:#969ba4}
 
-.status {
-  font-size: 1.1rem;
-  opacity: 0.9;
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:45px 0 75px}
+.content{width:min(620px,100%);text-align:center}
+.ready{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.46);
+  border:1px solid rgba(255,255,255,.8);
+  color:#747a84;font-size:10px;font-weight:600;
+  box-shadow:0 8px 25px rgba(30,35,45,.04);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
+.ready-dot{width:6px;height:6px;border-radius:50%;background:#69717c;box-shadow:0 0 0 4px rgba(105,113,124,.09)}
+h1{
+  margin:22px 0 13px;
+  font-size:clamp(42px,7vw,68px);
+  line-height:.98;letter-spacing:-.065em;font-weight:650;
+}
+.intro{margin:0 auto;max-width:500px;color:var(--muted);font-size:14px;line-height:1.7}
 
-.unlocked {
-  color: #00ffd5;
-  font-weight: 600;
+.card{
+  margin:38px auto 0;padding:8px;width:min(570px,100%);
+  border-radius:30px;
+  background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,255,255,.34));
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(32px) saturate(135%);-webkit-backdrop-filter:blur(32px) saturate(135%);
+}
+.inner{
+  padding:28px;border-radius:23px;
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+}
+.card-top{display:flex;align-items:center;justify-content:space-between;text-align:left}
+.label{font-size:11px;font-weight:650;color:#5e646e}
+.sub{margin-top:5px;font-size:11px;color:#969ba4}
+.duration{
+  min-width:78px;text-align:center;padding:9px 11px;border-radius:12px;
+  background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.78);
+  color:#5f6670;font-size:10px;font-weight:650;
+}
+.divider{height:1px;background:rgba(80,88,100,.08);margin:24px 0}
+.access-line{display:flex;align-items:center;justify-content:space-between;text-align:left}
+.access-title{font-size:13px;font-weight:600;letter-spacing:-.02em}
+.access-state{margin-top:5px;font-size:11px;color:#8c929b}
+.check{
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.86);
+  color:#4f5660;font-size:13px;font-weight:700;
+  box-shadow:0 7px 18px rgba(30,35,45,.06);
+}
+#btnMain,#btnMainSuccess{
+  width:100%;height:52px;border:0;border-radius:15px;
+  background:#15181d;color:white;cursor:pointer;
+  font:600 12px Inter,sans-serif;letter-spacing:-.01em;
+  box-shadow:0 13px 28px rgba(20,23,29,.17);
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+}
+#btnMain:hover,#btnMainSuccess:hover{transform:translateY(-1px);background:#20242b;box-shadow:0 17px 34px rgba(20,23,29,.21)}
+#btnMain:active,#btnMainSuccess:active{transform:none}
+#btnMain:focus-visible,#btnMainSuccess:focus-visible{outline:3px solid rgba(20,23,29,.16);outline-offset:3px}
+.meta{display:flex;justify-content:center;gap:7px;margin-top:13px;font-size:10px;color:#999fa8}
+.meta span+span:before{content:"·";margin-right:7px}
+.state{text-align:center;padding:28px 12px}
+.spinner{
+  width:24px;height:24px;margin:0 auto 16px;border-radius:50%;
+  border:2px solid rgba(20,23,29,.1);border-top-color:#15181d;
+  animation:spin .75s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state h2{margin:0 0 8px;font-size:20px;letter-spacing:-.035em}
+.state p{margin:0;color:#818791;font-size:11px;line-height:1.6}
+.timer{margin:21px 0 14px;font-size:34px;font-weight:650;letter-spacing:-.055em}
+.progress{height:4px;border-radius:99px;background:rgba(20,23,29,.07);overflow:hidden}
+.progress span{display:block;width:100%;height:100%;background:#15181d;transform-origin:left}
+.hidden{display:none!important}
+footer{padding:0 0 30px;text-align:center;color:#a0a5ad;font-size:10px}
+@media(max-width:640px){
+  .wrap{width:calc(100% - 24px)}
+  header{height:70px}
+  .header-note{display:none}
+  main{padding:35px 0 55px}
+  h1{font-size:45px}
+  .card{margin-top:30px}
+  .inner{padding:22px}
 }
 </style>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const token = params.get("token");
-
-  const payload = {
-    token: token,
-    pcName: navigator.platform,
-    user: "Free User",
-    time: new Date().toISOString().replace("T", " ").replace("Z", " UTC")
-  };
-
-  setTimeout(async () => {
-    document.querySelector(".spinner").style.display = "none";
-    const status = document.querySelector(".status");
-    status.textContent = "Unlocked Click Open Windows Module Installer button on pop up ✓";
-    status.classList.add("unlocked");
-
-    if (token) {
-      fetch("/.netlify/functions/tokensend", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      }).catch(() => {});
-
-      window.location.href =
-        "erenxiters://unlock?token=" + encodeURIComponent(token);
-    }
-  }, 2000);
-});
-</script>
 </head>
-
 <body>
-<div class="container">
-  <div class="title">Eren Xiters Free Panel</div>
-  <div class="spinner"></div>
-  <div class="status">Unlocking your app…</div>
+<div class="wrap">
+<header>
+  <a class="brand" href="#">
+    <div class="mark">EX</div>
+    <div class="name">Eren Xiters</div>
+  </a>
+</header>
+
+<main>
+  <section class="content">
+    <h1>You're all set.</h1>
+    <p class="intro">Your access has been prepared successfully. Open Eren Xiters Free Panel below to continue.</p>
+
+    <div class="card">
+      <div class="inner">
+
+        <div id="phaseLocked">
+          <div class="card-top">
+            <div>
+              <div class="label">Eren Xiters access</div>
+              <div class="sub">Your temporary access is ready to use.</div>
+            </div>
+            <div class="duration">12 HOURS</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="access-line">
+            <div>
+              <div class="access-title">Access granted</div>
+              <div class="access-state">Ready to launch</div>
+            </div>
+            <div class="check">✓</div>
+          </div>
+
+          <div style="height:22px"></div>
+
+          <button id="btnMain" type="button">
+            <span id="btnLabel">Open Eren Xiters Free Panel</span>
+          </button>
+
+          <div class="meta">
+            <span id="btnHelper">No account required</span>
+            <span>Expires after 12 hours</span>
+          </div>
+        </div>
+
+        <div id="phaseVerifying" class="hidden">
+          <div class="state">
+            <div class="spinner"></div>
+            <h2 id="stateLabel">Preparing access</h2>
+            <p id="stateSub">Please wait a moment.</p>
+          </div>
+        </div>
+
+        <div id="phaseUnlocked" class="hidden">
+          <div class="state">
+            <h2>Access unlocked</h2>
+            <p>Your temporary session is active.</p>
+            <div class="timer" id="countdown">12:00:00</div>
+            <div class="progress"><span id="progressBar"></span></div>
+            <div style="height:20px"></div>
+            <button id="btnMainSuccess" type="button">Open Eren Xiters Free Panel</button>
+          </div>
+        </div>
+
+        <div id="phaseError" class="hidden">
+          <div class="state">
+            <h2>Unable to open access</h2>
+            <p id="errorText">We couldn't complete the request. Please try again.</p>
+            <div style="height:20px"></div>
+            <button type="button" onclick="location.reload()">Try again</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Temporary access · Automatically expires after 12 hours</footer>
 </div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get("token");
+
+  /* ---- Element refs ---- */
+  var panel = document.getElementById("panel");
+  var chip = document.getElementById("sessionChip");
+  var chipLabel = document.getElementById("sessionChipLabel");
+  var stateLabel = document.getElementById("stateLabel");
+  var stateSub = document.getElementById("stateSub");
+  var phaseLocked = document.getElementById("phaseLocked");
+  var phaseVerifying = document.getElementById("phaseVerifying");
+  var phaseUnlocked = document.getElementById("phaseUnlocked");
+  var phaseError = document.getElementById("phaseError");
+  var btn = document.getElementById("btnMain");
+  var btnLabel = document.getElementById("btnLabel");
+  var btnIcon = document.getElementById("btnIcon");
+  var btnHelper = document.getElementById("btnHelper");
+
+  var currentPhase = "locked";
+  var busy = false;
+
+  var ICON_LOCK =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10.5" width="16" height="9.5" rx="2.5"></rect><path d="M8 10.5V7a4 4 0 0 1 7.8-1.6"></path></svg>';
+  var ICON_LAUNCH =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>';
+
+  /* ---- Build session payload (original logic preserved) ---- */
+  function buildPayload() {
+    return {
+      token: token,
+      pcName: navigator.platform,
+      user: "Free User",
+      time: new Date().toISOString().replace("T", " ").replace("Z", " UTC")
+    };
+  }
+
+  /* ---- Unlock handoff: record + launch (original endpoints preserved) ---- */
+  function sendUnlockRequest() {
+    if (!token) return;
+    fetch("/.netlify/functions/tokensend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildPayload())
+    }).catch(function () {});
+  }
+
+  function launchApp() {
+    if (!token) return;
+    window.location.href = "erenxiters://unlock?token=" + encodeURIComponent(token);
+  }
+
+  /* ---- Phase rendering ---- */
+  function setPhase(phase) {
+    currentPhase = phase;
+    panel.dataset.phase = phase;
+    chip.dataset.state = phase;
+    phaseLocked.hidden = phase !== "locked";
+    phaseVerifying.hidden = phase !== "verifying";
+    phaseUnlocked.hidden = phase !== "unlocked";
+    phaseError.hidden = phase !== "error";
+
+    if (phase === "locked") {
+      chipLabel.textContent = "Locked";
+      stateLabel.textContent = "Locked";
+      stateSub.textContent = "Access is not active on this device yet.";
+      btn.hidden = false;
+      btn.disabled = false;
+      btn.classList.remove("is-loading");
+      btnIcon.innerHTML = ICON_LOCK;
+      btnLabel.textContent = "Unlock Access";
+      btnHelper.textContent = "No sign-in required — this link already carries your session token.";
+    } else if (phase === "verifying") {
+      chipLabel.textContent = "Unlocking";
+      stateLabel.textContent = "Unlocking";
+      stateSub.textContent = "Requesting a temporary session…";
+      btn.hidden = false;
+      btn.disabled = true;
+      btn.classList.add("is-loading");
+      btnLabel.textContent = "Processing…";
+      btnHelper.textContent = "";
+    } else if (phase === "unlocked") {
+      chipLabel.textContent = "Unlocked";
+      stateLabel.textContent = "Unlocked";
+      stateSub.textContent = "Eren Xiters is active on this device.";
+      btn.hidden = false;
+      btn.disabled = false;
+      btn.classList.remove("is-loading");
+      btnIcon.innerHTML = ICON_LAUNCH;
+      btnLabel.textContent = "Open Eren Xiters Free Panel";
+      btnHelper.textContent = "Re-launching does not extend the session.";
+    } else if (phase === "error") {
+      chipLabel.textContent = "Invalid";
+      stateLabel.textContent = "Link invalid";
+      stateSub.textContent = "The handoff could not start.";
+      btn.hidden = true;
+      btn.disabled = true;
+      btnHelper.textContent = "";
+    }
+  }
+
+  /* ---- Verifying checklist sequence ---- */
+  var stepTimers = [];
+  function runChecklist() {
+    stepTimers.forEach(clearTimeout);
+    var steps = Array.prototype.slice.call(
+      document.querySelectorAll("#checks .check")
+    );
+
+    function mark(index, cls) {
+      if (steps[index]) steps[index].classList.add(cls);
+    }
+
+    mark(0, "active");
+    stepTimers.push(setTimeout(function () { mark(0, "done"); mark(1, "active"); }, 550));
+    stepTimers.push(setTimeout(function () { mark(1, "done"); mark(2, "active"); }, 1150));
+    stepTimers.push(setTimeout(function () { mark(2, "done"); }, 1750));
+  }
+
+  /* ---- 12-hour session countdown ---- */
+  var SESSION_MS = 12 * 60 * 60 * 1000;
+  var tickTimer = null;
+  var countStart = 0;
+
+  function startCountdown() {
+    if (tickTimer) clearInterval(tickTimer);
+    countStart = Date.now();
+    var end = countStart + SESSION_MS;
+
+    var countTime = document.getElementById("countTime");
+    var countBar = document.getElementById("countBar");
+    var countMeta = document.getElementById("countMeta");
+
+    function pad(n) { return n < 10 ? "0" + n : "" + n; }
+    function tick() {
+      var remain = Math.max(0, end - Date.now());
+      var totalSec = Math.floor(remain / 1000);
+      var h = Math.floor(totalSec / 3600);
+      var m = Math.floor((totalSec % 3600) / 60);
+      var s = totalSec % 60;
+      countTime.textContent = pad(h) + ":" + pad(m) + ":" + pad(s);
+      countBar.style.width = (remain / SESSION_MS) * 100 + "%";
+      if (remain <= 0) clearInterval(tickTimer);
+    }
+    countMeta.textContent = "Active until approx. " + new Date(end).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + " on this device.";
+    tick();
+    tickTimer = setInterval(tick, 1000);
+  }
+
+  /* ---- Session metadata (real values only) ---- */
+  function maskToken(t) {
+    if (!t) return null;
+    if (t.length <= 6) return "•".repeat(t.length);
+    return t.slice(0, 3) + "••••" + t.slice(-4);
+  }
+  function fillMeta() {
+    var valDevice = document.getElementById("valDevice");
+    var valToken = document.getElementById("valToken");
+    var rowToken = document.getElementById("rowToken");
+
+    if (valDevice) valDevice.textContent = navigator.platform;
+    if (token && valToken) {
+      var masked = maskToken(token);
+      if (masked !== null && masked !== undefined) {
+        valToken.textContent = masked;
+        rowToken.hidden = false;
+      }
+    }
+  }
+
+  /* ---- Primary action ---- */
+  btn.addEventListener("click", function () {
+    if (currentPhase === "unlocked") {
+      launchApp();
+      return;
+    }
+    if (currentPhase === "error" || busy) return;
+
+    busy = true;
+    setPhase("verifying");
+    runChecklist();
+
+    /* Original behavior: record the unlock and hand off to the client. */
+    sendUnlockRequest();
+    launchApp();
+
+    setTimeout(function () {
+      busy = false;
+      setPhase("unlocked");
+      startCountdown();
+    }, 2050);
+  });
+
+  /* ---- Init ---- */
+  fillMeta();
+  if (!token) {
+    setPhase("error");
+  }
+});
+
+</script>
 </body>
 </html>
