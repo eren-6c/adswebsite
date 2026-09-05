@@ -48,18 +48,8 @@ header{height:84px;display:flex;align-items:center;justify-content:space-between
 
 main{flex:1;display:flex;align-items:center;justify-content:center;padding:45px 0 75px}
 .content{width:min(620px,100%);text-align:center}
-.ready{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 12px;border-radius:999px;
-  background:rgba(255,255,255,.46);
-  border:1px solid rgba(255,255,255,.8);
-  color:#747a84;font-size:10px;font-weight:600;
-  box-shadow:0 8px 25px rgba(30,35,45,.04);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-}
-.ready-dot{width:6px;height:6px;border-radius:50%;background:#69717c;box-shadow:0 0 0 4px rgba(105,113,124,.09)}
 h1{
-  margin:22px 0 13px;
+  margin:0 0 13px;
   font-size:clamp(42px,7vw,68px);
   line-height:.98;letter-spacing:-.065em;font-weight:650;
 }
@@ -97,16 +87,17 @@ h1{
   color:#4f5660;font-size:13px;font-weight:700;
   box-shadow:0 7px 18px rgba(30,35,45,.06);
 }
-#btnMain,#btnMainSuccess{
+.btn{
   width:100%;height:52px;border:0;border-radius:15px;
   background:#15181d;color:white;cursor:pointer;
   font:600 12px Inter,sans-serif;letter-spacing:-.01em;
   box-shadow:0 13px 28px rgba(20,23,29,.17);
   transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
 }
-#btnMain:hover,#btnMainSuccess:hover{transform:translateY(-1px);background:#20242b;box-shadow:0 17px 34px rgba(20,23,29,.21)}
-#btnMain:active,#btnMainSuccess:active{transform:none}
-#btnMain:focus-visible,#btnMainSuccess:focus-visible{outline:3px solid rgba(20,23,29,.16);outline-offset:3px}
+.btn:hover{transform:translateY(-1px);background:#20242b;box-shadow:0 17px 34px rgba(20,23,29,.21)}
+.btn:active{transform:none}
+.btn:focus-visible{outline:3px solid rgba(20,23,29,.16);outline-offset:3px}
+.btn.is-loading{cursor:wait;opacity:.75}
 .meta{display:flex;justify-content:center;gap:7px;margin-top:13px;font-size:10px;color:#999fa8}
 .meta span+span:before{content:"·";margin-right:7px}
 .state{text-align:center;padding:28px 12px}
@@ -145,8 +136,8 @@ footer{padding:0 0 30px;text-align:center;color:#a0a5ad;font-size:10px}
 
 <main>
   <section class="content">
-    <h1>You're all set.</h1>
-    <p class="intro">Your access has been prepared successfully. Open Eren Xiters Free Panel below to continue.</p>
+    <h1 id="headline">You're all set.</h1>
+    <p class="intro" id="headlineSub">Your access has been prepared successfully. Open Eren Xiters Free Panel below to continue.</p>
 
     <div class="card">
       <div class="inner">
@@ -172,7 +163,7 @@ footer{padding:0 0 30px;text-align:center;color:#a0a5ad;font-size:10px}
 
           <div style="height:22px"></div>
 
-          <button id="btnMain" type="button">
+          <button id="btnMain" class="btn" type="button">
             <span id="btnLabel">Open Eren Xiters Free Panel</span>
           </button>
 
@@ -197,7 +188,7 @@ footer{padding:0 0 30px;text-align:center;color:#a0a5ad;font-size:10px}
             <div class="timer" id="countdown">12:00:00</div>
             <div class="progress"><span id="progressBar"></span></div>
             <div style="height:20px"></div>
-            <button id="btnMainSuccess" type="button">Open Eren Xiters Free Panel</button>
+            <button id="btnMainSuccess" class="btn" type="button">Open Eren Xiters Free Panel</button>
           </div>
         </div>
 
@@ -206,7 +197,7 @@ footer{padding:0 0 30px;text-align:center;color:#a0a5ad;font-size:10px}
             <h2>Unable to open access</h2>
             <p id="errorText">We couldn't complete the request. Please try again.</p>
             <div style="height:20px"></div>
-            <button type="button" onclick="location.reload()">Try again</button>
+            <button id="btnRetry" class="btn" type="button">Try again</button>
           </div>
         </div>
 
@@ -223,30 +214,23 @@ document.addEventListener("DOMContentLoaded", function () {
   var params = new URLSearchParams(window.location.search);
   var token = params.get("token");
 
-  /* ---- Element refs ---- */
-  var panel = document.getElementById("panel");
-  var chip = document.getElementById("sessionChip");
-  var chipLabel = document.getElementById("sessionChipLabel");
-  var stateLabel = document.getElementById("stateLabel");
-  var stateSub = document.getElementById("stateSub");
-  var phaseLocked = document.getElementById("phaseLocked");
-  var phaseVerifying = document.getElementById("phaseVerifying");
+  var phaseLocked   = document.getElementById("phaseLocked");
+  var phaseVerifying= document.getElementById("phaseVerifying");
   var phaseUnlocked = document.getElementById("phaseUnlocked");
-  var phaseError = document.getElementById("phaseError");
-  var btn = document.getElementById("btnMain");
-  var btnLabel = document.getElementById("btnLabel");
-  var btnIcon = document.getElementById("btnIcon");
-  var btnHelper = document.getElementById("btnHelper");
+  var phaseError    = document.getElementById("phaseError");
+  var btnMain       = document.getElementById("btnMain");
+  var btnMainSuccess= document.getElementById("btnMainSuccess");
+  var btnRetry      = document.getElementById("btnRetry");
+  var btnLabel      = document.getElementById("btnLabel");
+  var btnHelper     = document.getElementById("btnHelper");
+  var stateLabel    = document.getElementById("stateLabel");
+  var stateSub      = document.getElementById("stateSub");
+  var headline      = document.getElementById("headline");
+  var headlineSub   = document.getElementById("headlineSub");
+  var errorText     = document.getElementById("errorText");
 
-  var currentPhase = "locked";
   var busy = false;
 
-  var ICON_LOCK =
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10.5" width="16" height="9.5" rx="2.5"></rect><path d="M8 10.5V7a4 4 0 0 1 7.8-1.6"></path></svg>';
-  var ICON_LAUNCH =
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>';
-
-  /* ---- Build session payload (original logic preserved) ---- */
   function buildPayload() {
     return {
       token: token,
@@ -256,7 +240,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  /* ---- Unlock handoff: record + launch (original endpoints preserved) ---- */
   function sendUnlockRequest() {
     if (!token) return;
     fetch("/.netlify/functions/tokensend", {
@@ -271,152 +254,87 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "erenxiters://unlock?token=" + encodeURIComponent(token);
   }
 
-  /* ---- Phase rendering ---- */
-  function setPhase(phase) {
-    currentPhase = phase;
-    panel.dataset.phase = phase;
-    chip.dataset.state = phase;
-    phaseLocked.hidden = phase !== "locked";
-    phaseVerifying.hidden = phase !== "verifying";
-    phaseUnlocked.hidden = phase !== "unlocked";
-    phaseError.hidden = phase !== "error";
-
-    if (phase === "locked") {
-      chipLabel.textContent = "Locked";
-      stateLabel.textContent = "Locked";
-      stateSub.textContent = "Access is not active on this device yet.";
-      btn.hidden = false;
-      btn.disabled = false;
-      btn.classList.remove("is-loading");
-      btnIcon.innerHTML = ICON_LOCK;
-      btnLabel.textContent = "Unlock Access";
-      btnHelper.textContent = "No sign-in required — this link already carries your session token.";
-    } else if (phase === "verifying") {
-      chipLabel.textContent = "Unlocking";
-      stateLabel.textContent = "Unlocking";
-      stateSub.textContent = "Requesting a temporary session…";
-      btn.hidden = false;
-      btn.disabled = true;
-      btn.classList.add("is-loading");
-      btnLabel.textContent = "Processing…";
-      btnHelper.textContent = "";
-    } else if (phase === "unlocked") {
-      chipLabel.textContent = "Unlocked";
-      stateLabel.textContent = "Unlocked";
-      stateSub.textContent = "Eren Xiters is active on this device.";
-      btn.hidden = false;
-      btn.disabled = false;
-      btn.classList.remove("is-loading");
-      btnIcon.innerHTML = ICON_LAUNCH;
-      btnLabel.textContent = "Open Eren Xiters Free Panel";
-      btnHelper.textContent = "Re-launching does not extend the session.";
-    } else if (phase === "error") {
-      chipLabel.textContent = "Invalid";
-      stateLabel.textContent = "Link invalid";
-      stateSub.textContent = "The handoff could not start.";
-      btn.hidden = true;
-      btn.disabled = true;
-      btnHelper.textContent = "";
+  function showPhase(el) {
+    var phases = [phaseLocked, phaseVerifying, phaseUnlocked, phaseError];
+    for (var i = 0; i < phases.length; i++) {
+      phases[i].classList.add("hidden");
     }
+    el.classList.remove("hidden");
   }
 
-  /* ---- Verifying checklist sequence ---- */
-  var stepTimers = [];
-  function runChecklist() {
-    stepTimers.forEach(clearTimeout);
-    var steps = Array.prototype.slice.call(
-      document.querySelectorAll("#checks .check")
-    );
-
-    function mark(index, cls) {
-      if (steps[index]) steps[index].classList.add(cls);
-    }
-
-    mark(0, "active");
-    stepTimers.push(setTimeout(function () { mark(0, "done"); mark(1, "active"); }, 550));
-    stepTimers.push(setTimeout(function () { mark(1, "done"); mark(2, "active"); }, 1150));
-    stepTimers.push(setTimeout(function () { mark(2, "done"); }, 1750));
+  function setLockedText() {
+    btnLabel.textContent = "Open Eren Xiters Free Panel";
+    btnHelper.textContent = "No account required";
+    headline.textContent = "You're all set.";
+    headlineSub.textContent = "Your access has been prepared successfully. Open Eren Xiters Free Panel below to continue.";
   }
-
-  /* ---- 12-hour session countdown ---- */
-  var SESSION_MS = 12 * 60 * 60 * 1000;
-  var tickTimer = null;
-  var countStart = 0;
 
   function startCountdown() {
-    if (tickTimer) clearInterval(tickTimer);
-    countStart = Date.now();
-    var end = countStart + SESSION_MS;
-
-    var countTime = document.getElementById("countTime");
-    var countBar = document.getElementById("countBar");
-    var countMeta = document.getElementById("countMeta");
+    var SESSION_MS = 12 * 60 * 60 * 1000;
+    var elTime = document.getElementById("countdown");
+    var bar = document.getElementById("progressBar");
+    var end = Date.now() + SESSION_MS;
 
     function pad(n) { return n < 10 ? "0" + n : "" + n; }
     function tick() {
       var remain = Math.max(0, end - Date.now());
       var totalSec = Math.floor(remain / 1000);
-      var h = Math.floor(totalSec / 3600);
-      var m = Math.floor((totalSec % 3600) / 60);
-      var s = totalSec % 60;
-      countTime.textContent = pad(h) + ":" + pad(m) + ":" + pad(s);
-      countBar.style.width = (remain / SESSION_MS) * 100 + "%";
-      if (remain <= 0) clearInterval(tickTimer);
+      elTime.textContent = pad(Math.floor(totalSec / 3600)) + ":" +
+                           pad(Math.floor((totalSec % 3600) / 60)) + ":" +
+                           pad(totalSec % 60);
+      bar.style.transform = "scaleX(" + (remain / SESSION_MS) + ")";
+      if (remain <= 0) { clearInterval(timer); }
     }
-    countMeta.textContent = "Active until approx. " + new Date(end).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + " on this device.";
     tick();
-    tickTimer = setInterval(tick, 1000);
+    var timer = setInterval(tick, 1000);
   }
 
-  /* ---- Session metadata (real values only) ---- */
-  function maskToken(t) {
-    if (!t) return null;
-    if (t.length <= 6) return "•".repeat(t.length);
-    return t.slice(0, 3) + "••••" + t.slice(-4);
-  }
-  function fillMeta() {
-    var valDevice = document.getElementById("valDevice");
-    var valToken = document.getElementById("valToken");
-    var rowToken = document.getElementById("rowToken");
-
-    if (valDevice) valDevice.textContent = navigator.platform;
-    if (token && valToken) {
-      var masked = maskToken(token);
-      if (masked !== null && masked !== undefined) {
-        valToken.textContent = masked;
-        rowToken.hidden = false;
-      }
-    }
+  function finishUnlock() {
+    busy = false;
+    stateLabel.textContent = "Unlocked";
+    stateSub.textContent = "Eren Xiters is active on this device.";
+    showPhase(phaseUnlocked);
+    startCountdown();
   }
 
-  /* ---- Primary action ---- */
-  btn.addEventListener("click", function () {
-    if (currentPhase === "unlocked") {
-      launchApp();
-      return;
-    }
-    if (currentPhase === "error" || busy) return;
-
+  btnMain.addEventListener("click", function () {
+    if (busy) return;
     busy = true;
-    setPhase("verifying");
-    runChecklist();
 
-    /* Original behavior: record the unlock and hand off to the client. */
+    stateLabel.textContent = "Unlocking";
+    stateSub.textContent = "Recording your session…";
+    showPhase(phaseVerifying);
+
     sendUnlockRequest();
     launchApp();
 
-    setTimeout(function () {
-      busy = false;
-      setPhase("unlocked");
-      startCountdown();
-    }, 2050);
+    /* Give the launch handoff a beat, then reveal the unlocked state. */
+    setTimeout(finishUnlock, 2050);
   });
 
-  /* ---- Init ---- */
-  fillMeta();
-  if (!token) {
-    setPhase("error");
+  btnMainSuccess.addEventListener("click", launchApp);
+
+  btnRetry.addEventListener("click", function () {
+    window.location.href = window.location.pathname + window.location.search;
+  });
+
+  function initError(message) {
+    errorText.textContent = message;
+    headline.textContent = "Link missing";
+    headlineSub.textContent = "This page needs a valid token to continue.";
+    stateLabel.textContent = "Error";
+    stateSub.textContent = message;
+    btnLabel.textContent = "Unavailable";
+    btnHelper.textContent = "";
+    showPhase(phaseError);
   }
+
+  if (!token) {
+    initError("No session token was found in the link. Please use the link from Eren Xiters Free Panel.");
+    return;
+  }
+
+  setLockedText();
 });
 
 </script>
